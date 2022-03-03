@@ -1,0 +1,72 @@
+﻿
+
+
+@model AgeCalculator.Models.AgeModel
+
+@using (Html.BeginForm())
+{
+    <form>
+        <div class="form-group row">
+            <br>
+            <label class="control-label col-sm-2" asp-for="Dob">Birth Date :</label>
+            <div>@Html.TextBox("DOB", Model.DOB == null ? "" : string.Format("{0:dd MMM yyyy}", Model.DOB), new { @class = "datepicker", @type = "date", onclick = "calculate()" })</div>
+
+            <label class="control-label col-sm-2" for="@Model.Months">Months :</label>
+            <div class="col-sm-5">
+                <input type="text" id="month">
+            </div>
+            <label class="control-label col-sm-2" for="@Model.Day">Day:</label>
+            <div class="col-sm-5">
+                <input type="text" id="day">
+            </div>
+            <label class="control-label col-sm-2" for="@Model.Hour">Hour:</label>
+            <div class="col-sm-5">
+                <input type="text" id="hour">
+            </div>
+            <label class="control-label col-sm-2" for="@Model.Minute"> Minute:</label>
+            <div class="col-sm-5">
+                <input type="text" id="minute">
+            </div>
+            <label class="control-label col-sm-2" for="@Model.Secunde">Secunde:</label>
+            <div class="col-sm-5">
+                <input type="text" id="secunde">
+            </div>
+        </div>
+    </form>
+}
+@section Scripts{
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+
+        function getAge(dateString) {
+
+            var ageInMilliseconds = new Date() - new Date(dateString);
+            //return Math.floor(ageInMilliseconds / 1000 / 60 / 60 / 24 / 365);
+            return ageInMilliseconds;
+        }
+
+        function calculate() {
+            var dateOfBirth = $('.datepicker').datepicker('getDate');
+            var diffInMilliseconds = new Date() - new Date(dateOfBirth);
+            var age = getAge(dateOfBirth);
+
+            var month = new Date(diffInMilliseconds - age / (1000 * 60 * 60 * 24 * 30.4375));
+            document.getElementById("month").value = month.getMonth();
+
+            var day = new Date(diffInMilliseconds - age / (1000 * 60 * 60 * 24));
+            document.getElementById("day").value = day.getDay();
+
+            var secunde = new Date(diffInMilliseconds - age / 1000);
+            document.getElementById("secunde").value = secunde.getSeconds();
+
+            var hour = new Date(diffInMilliseconds - age / (1000 * 60 * 60));
+            document.getElementById("hour").value = hour.getHours();
+
+            var minute = new Date(diffInMilliseconds - age / (1000 * 60));
+            document.getElementById("minute").value = minute.getMinutes();
+
+        }
+    </script>
+}
